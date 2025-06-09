@@ -45,34 +45,39 @@ Esta práctica tiene como objetivo contenerizar una aplicación frontend desarro
 
 ### Paso 1: Crear proyecto backend
 
+**Archivo:** `backend/index.js`
 ```js
-// backend/index.js
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
 app.use(cors());
 
 app.get("/api/products", (req, res) => {
+  console.log("Solicitud recibida en /api/products");
   res.json([
     { id: 1, name: "Producto A", price: 100 },
     { id: 2, name: "Producto B", price: 200 }
   ]);
 });
 
-app.listen(5000, () => console.log("Backend corriendo en puerto 5000"));
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Backend corriendo en puerto ${PORT}`));
 ```
-
+- ![1](semana10/2.png)
+  
 ### Paso 2: Dockerfile para backend
 
 ```Dockerfile
-# backend/Dockerfile
 FROM node:18-alpine
 WORKDIR /app
 COPY . .
 RUN npm install
 EXPOSE 5000
 CMD ["node", "index.js"]
+
 ```
+- ![1](semana10/3.png)
 
 ### Paso 3: Crear proyecto frontend
 
@@ -83,28 +88,28 @@ npx create-react-app frontend
 ### Paso 4: Dockerfile para build de frontend
 
 ```Dockerfile
-# frontend/Dockerfile (build)
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
-```
 
+```
+- ![1](semana10/4.png)
+- 
 ### Paso 5: Dockerfile para servir frontend con Nginx
 
 ```Dockerfile
-# frontend/nginx/Dockerfile
 FROM nginx:alpine
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 ```
+- ![1](semana10/5.png)
 
 ### Paso 6: Configuración de Nginx
 
 ```nginx
-# frontend/nginx/default.conf
 server {
   listen 80;
   server_name localhost;
@@ -125,6 +130,7 @@ server {
   }
 }
 ```
+- ![1](semana10/6.png)
 
 ### Paso 7: Crear `docker-compose.yml`
 
@@ -154,9 +160,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_DB: exampledb
-      POSTGRES_USER: exampleuser
-      POSTGRES_PASSWORD: examplepass
+      POSTGRES_DB: enriquedb
+      POSTGRES_USER: enriqueuser
+      POSTGRES_PASSWORD: 0106210605
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -167,8 +173,10 @@ networks:
 
 volumes:
   pgdata:
-```
 
+```
+- ![1](semana10/7.png)
+- 
 ## 9. Resultados esperados
 
 - El backend responde en el puerto 5000 con los datos de la API `/api/products`.
@@ -178,11 +186,8 @@ volumes:
 
 ### Capturas de pantalla del resultado
 
-- ![1](semana9/1.png)
-- ![2](semana9/2.png)
-- ![3](semana9/3.png)
-- ![4](semana9/4.png)
-- ![5](semana9/5.png)
+- ![1](semana10/1.png)
+
 
 ## 10. Bibliografía
 
