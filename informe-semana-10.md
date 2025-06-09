@@ -130,7 +130,7 @@ server {
   }
 }
 ```
-- ![1](semana10/6.png)
+- ![6](semana10/6.png)
 
 ### Paso 7: Crear `docker-compose.yml`
 
